@@ -1,0 +1,21 @@
+.sort_item_dragging {
+	background-color: #d26;
+	color: #fff;
+	padding: 12px 24px;
+	font-size: 12px;
+}
+
+.sort_list {
+	margin-top: 20px;
+	user-select: none;
+	.sort_item {
+		display: flex;
+		align-items: center;
+		padding: 12px 24px;
+		font-size: 12px;
+		border-bottom: 1px solid #f0f0f0;
+		&:last-child {
+			border-bottom: none;
+		}
+	}
+}
