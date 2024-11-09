@@ -27,7 +27,7 @@ export default function Home() {
         title="拖拽排序1"
         extra={<Link to='demo3' >link</Link>}
       >
-        拖拽排序1
+        拖拽排序1-react-sortable-hoc
       </Card>
     </Flex>
   );
