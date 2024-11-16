@@ -41,7 +41,7 @@ export default function Demo3() {
       </Radio.Group>
       <Button
         onClick={() => {
-          setData([...data, `item${data.length+1}`]);
+          setData([...data, `item${data.length + 1}`]);
         }}
       >
         添加

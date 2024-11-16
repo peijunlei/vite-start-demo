@@ -3,16 +3,60 @@ import { useEffect, useRef, useState } from 'react';
 import { getRangeRandom } from '../../utils';
 import { Button, Card, Divider, message, Skeleton } from 'antd';
 import { useUpdateEffect } from 'ahooks';
-import './index.scss'
 import InfiniteScroll from 'react-infinite-scroll-component';
 
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import defaultImage from '../../assets/image-default.png';
+import 'react-lazy-load-image-component/src/effects/blur.css';
+import './index.scss'
+const loadNum = 10;
+const columnWidth = 400;
+function generateImages(count = 10) {
+  return Array.from({ length: count }).map(() => `
+    https://picsum.photos/200/${getRangeRandom(200, 400)}
+    `);
+}
+const Item = (props: {
+  item: any,
+  layout: () => void,
+  index: number
+}) => {
+  const { item, index, layout } = props;
+  const handleImageLoad = () => {
+    console.log('image loaded');
+    layout()
+  };
 
+  return (
+    <Card
+      hoverable
+      className="grid-item"
+      style={{
+        width: columnWidth,
+        marginBottom: 10,
+        borderColor: '#ccc',
+      }}
+      onClick={() => {
+        message.success(`click${index + 1}`,)
+      }}
+    >
+      <LazyLoadImage
+        // effect="blur"
+        placeholderSrc={defaultImage}
+        onLoad={handleImageLoad}
+        src={item.src}
+        wrapperClassName='item-bg'
+        alt=""
+        style={{ width: '100%' }}
+      />
+    </Card>
+  )
+}
 
-const loadNum = 5;
 function mockData(count = loadNum) {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(Array.from({ length: count }).map(() => getRangeRandom(100, 300)))
+      resolve(generateImages(count));
     }, 1000)
   })
 }
@@ -20,14 +64,18 @@ export default function Demo1() {
   const [data, setData] = useState([]);
   const msnry = useRef();
   const gridRef = useRef(null);
-
+  function layout() {
+    if (msnry.current) {
+      msnry.current.layout();
+    }
+  }
   async function loadMoreData() {
     const res = await mockData();
     setData((prevData) => [...prevData, ...res]);
   }
 
   async function init() {
-    const res = await mockData(10);
+    const res = await mockData(30);
     setData(res);
   }
 
@@ -45,7 +93,7 @@ export default function Demo1() {
       msnry.current = new Masonry(gridRef.current, {
         itemSelector: '.grid-item',
         gutter: 10,
-        columnWidth: 200,
+        columnWidth: columnWidth,
       });
     } else {
       const newItems = Array.from(
@@ -58,7 +106,7 @@ export default function Demo1() {
     <div
       id="scrollableDiv"
       style={{
-        height: 400,
+        height: '100%',
         padding: 16,
         overflowY: 'auto',
         border: '1px solid #ccc',
@@ -89,35 +137,17 @@ export default function Demo1() {
         >
           {
             data.map((v, index) => (
-              <Item key={index} item={{ height: v }} index={index} />
+              <Item
+                key={index}
+                layout={layout}
+                item={{ src: v }}
+                index={index}
+
+              />
             ))
           }
         </div>
       </InfiniteScroll >
     </div >
   );
-}
-function Item(props: {
-  item: any,
-  index: number
-}) {
-  const { item, index } = props;
-  return (
-    <Card
-      hoverable
-      className="grid-item"
-      style={{
-        width: 200,
-        marginBottom: 10,
-        height: item.height,
-        borderColor: '#ccc',
-      }}
-      onClick={() => {
-        message.success(`click${index + 1}`,)
-      }}
-    >
-      <p>序号：{index + 1}</p>
-      <p>高度：{item.height}</p>
-    </Card>
-  )
 }

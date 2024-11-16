@@ -17,6 +17,13 @@ export default function Home() {
       </Card>
       <Card
         hoverable
+        title="瀑布流-图片懒加载"
+        extra={<Link to='demo5' >link</Link>}
+      >
+        点击加载更多
+      </Card>
+      <Card
+        hoverable
         title="瀑布流-无限加载"
         extra={<Link to='demo2' >link</Link>}
       >
@@ -28,6 +35,13 @@ export default function Home() {
         extra={<Link to='demo3' >link</Link>}
       >
         拖拽排序1-react-sortable-hoc
+      </Card>
+      <Card
+        hoverable
+        title="demo4"
+        extra={<Link to='demo4' >link</Link>}
+      >
+       demo4
       </Card>
     </Flex>
   );
